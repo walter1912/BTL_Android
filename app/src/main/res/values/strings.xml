@@ -1,3 +1,17 @@
 <resources>
-    <string name="app_name">Learn English App</string>
+    <string name="btn_fav_word">Từ yêu thích</string>
+    <string name="btn_translate_quick">Cửa sổ tra nhanh</string>
+    <string name="btn_learn">Học từ vựng</string>
+    <string name="lv_new_words">Từ mới mỗi ngày</string>
+    <string name="btn_game">Game</string>
+    <string name="app_name">vocabulary</string>
+    <string name="text_score">Score: %d</string>
+    <string name="text_question_description">%s</string>
+    <string name="text_score_end">Your score: %d</string>
+    <string name="text_high_score">High score: %d</string>
+    <string name="search_all">Tra từ Anh Việt</string>
+    <string name="search_fav">Tìm từ yêu thích</string>
+    <string name="title_dialog_camera">Select image</string>
+    <string name="btn_dialog_camera">Camera</string>
+    <string name="btn_dialog_gallery">Gallery</string>
 </resources>
