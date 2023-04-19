@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_start_learn"
     android:padding="16dp"
-    tools:context=".StartingScreenActivity">
+    tools:context=".activities.StartingScreenActivity">
 
     <TextView
         android:id="@+id/text_view_awesome"

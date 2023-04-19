@@ -11,7 +11,7 @@
     android:paddingLeft="40dp"
     android:paddingBottom="20dp"
     android:layout_centerInParent="true"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
 
         <ImageView
