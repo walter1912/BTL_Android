@@ -27,7 +27,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerView"
-            android:name="com.bignerdranch.android.vocabularyapp.SearchAllFragment"
+            android:name="com.main.fragments.SearchAllFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:ignore="MissingConstraints"
@@ -151,7 +151,7 @@
                 <Button
                     android:id="@+id/new_word_refresh"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
+                    android:layout_height="48dp"
                     android:background="@drawable/bg_txt_new_words"
                     android:paddingStart="5dp"
                     android:paddingEnd="5dp"
@@ -164,7 +164,7 @@
                 <ListView
                     android:id="@+id/list_new_word"
                     android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:divider="@color/black"
                     android:dividerHeight="1dp"
                     android:ellipsize="end"

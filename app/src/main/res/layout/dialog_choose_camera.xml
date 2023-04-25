@@ -9,7 +9,6 @@
     android:layout_gravity="center"
     android:elevation="6dp"
     tools:context=".activities.MainActivity">
-
     <TextView
         android:id="@+id/dialog_txt_title"
         android:gravity="center"
@@ -36,8 +35,6 @@
             android:background="@drawable/bg_btn_fav"
             android:textColor="@color/white"
             android:text="@string/btn_dialog_camera"/>
-
-
         <Button
             android:id="@+id/btn_gallery"
             android:layout_width="wrap_content"
@@ -49,6 +46,4 @@
             android:textColor="@color/white"
             android:text="@string/btn_dialog_gallery"/>
     </LinearLayout>
-
-
 </LinearLayout>

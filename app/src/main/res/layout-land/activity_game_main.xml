@@ -76,6 +76,7 @@
                 android:clickable="false"
                 android:focusable="false"
                 android:gravity="center"
+                android:text="hi"
                 android:padding="10dp"
                 android:textColor="#ED9797"
                 android:textSize="32sp" />

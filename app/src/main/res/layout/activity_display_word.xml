@@ -15,13 +15,15 @@
         android:background="@drawable/bg_header">
 
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:onClick="onClickBtnBack"
             android:src="@drawable/ic_action_backarrow"
             tools:ignore="OnClick"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:contentDescription="ic_action_backarrow"
+            />
 
 
         <TextView
@@ -35,23 +37,27 @@
 
         <ImageButton
             android:id="@+id/btn_sound"
-            android:layout_width="40sp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
             android:src="@drawable/ic_action_sound"
             app:tint="@color/colorPrimary"
-            android:background="@drawable/search_icon_background"/>
+            android:background="@drawable/search_icon_background"
+            android:contentDescription="button_sound_description"/>
 
         <ImageButton
             android:id="@+id/btn_book_mark"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             app:tint="@color/colorPrimary"
             android:background="@drawable/search_icon_background"
             android:layout_marginRight="10dp"
-            android:src="@drawable/ic_action_bookmark" />
+
+            android:src="@drawable/ic_action_bookmark"
+            android:contentDescription="search_icon_background"
+            />
 
     </LinearLayout>
 

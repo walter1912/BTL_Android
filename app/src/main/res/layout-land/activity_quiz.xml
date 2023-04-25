@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_learn_vocabulary"
     android:padding="16dp"
-    tools:context=".QuizActivity">
+    tools:context=".activities.QuizActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/header"

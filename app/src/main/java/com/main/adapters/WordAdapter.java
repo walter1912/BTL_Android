@@ -46,8 +46,8 @@ public class WordAdapter  extends BaseAdapter {
         //chưa có activity_listview nên thay bằng activity_main
             convertView = inflater.inflate(R.layout.activity_main, null, true);
         //chưa có TextView có id=text_view_eng_word vì chưa tạo views xml,  text_view_description cũng tương tự
-//            holder.wordeng = convertView.findViewById(R.id.text_view_eng_word);
-//            holder.descri = convertView.findViewById(R.id.text_view_description);
+          holder.wordeng = convertView.findViewById(R.id.text_view_eng_word);
+          holder.descri = convertView.findViewById(R.id.text_view_description);
 
             convertView.setTag(holder);
         } else {

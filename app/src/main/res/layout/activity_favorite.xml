@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="#F1EBEB">
+    android:background="#F1EBEB"
+    tools:context=".activities.FavoriteActivity"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutHeader"
@@ -19,7 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:ignore="MissingConstraints"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout="@layout/fragment_search_all"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <RelativeLayout
@@ -58,8 +62,8 @@
 
             <AutoCompleteTextView
                 android:id="@+id/searchFav"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:hint="@string/search_fav"

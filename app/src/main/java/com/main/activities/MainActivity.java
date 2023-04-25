@@ -1,17 +1,30 @@
 package com.main.activities;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
+//import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.main.R;
 import com.main.database.DatabaseHelper;
+import com.main.R;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cursoradapter.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
     private DatabaseHelper mDatabaseHelper;
@@ -21,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     ListView listViewNewWord;
     private ImageView mPreviewIv;
 
+//    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         //hide actionBar
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
-        mPreviewIv = findViewById(R.id.imageIv);
+//        mPreviewIv = findViewById(R.id.imageIv);
 
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Jua-Regular.ttf");
         TextView mAppName = findViewById(R.id.text_app_name);
@@ -167,5 +181,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-}
 }
