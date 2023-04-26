@@ -157,7 +157,7 @@
                 <ListView
                     android:id="@+id/list_new_word"
                     android:layout_width="fill_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:divider="@color/black"
                     android:dividerHeight="1dp"
