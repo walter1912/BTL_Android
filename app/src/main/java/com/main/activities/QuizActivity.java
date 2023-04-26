@@ -101,6 +101,7 @@ public class QuizActivity extends AppCompatActivity {
 
         Intent intent= getIntent();
         String level= intent.getStringExtra(StartingScreenActivity.EXTRA_DIFFICULTY);
+        // số câu dựa trên độ khó
         int positionToShowToSpinner = intent.getIntExtra(StartingScreenActivity.POSITION,0);
         //textViewLevel.setText("Level: "+level);
 
@@ -161,7 +162,8 @@ public class QuizActivity extends AppCompatActivity {
             textViewQuestionCount.setText("Question: " + questionCounter + " of " + questionCountTotal);
             answered = false;
             buttonConfirmNext.setText("Confirm");
-
+            buttonConfirmNext.setTextColor(Color.BLACK);
+            buttonConfirmNext.setBackgroundResource(R.drawable.confirmdesign);
             timeLeftInMillis = COUNTDOWN_IN_MILIS;
             startCountDown();
         } else {
@@ -243,6 +245,8 @@ public class QuizActivity extends AppCompatActivity {
         }
         if (questionCounter < questionCountTotal) {
             buttonConfirmNext.setText("Next");
+            buttonConfirmNext.setTextColor(Color.WHITE);
+            buttonConfirmNext.setBackgroundResource(R.drawable.nextdesign);
         } else {
             buttonConfirmNext.setText("Finish");
         }

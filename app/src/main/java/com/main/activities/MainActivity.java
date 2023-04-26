@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabaseHelper = new DatabaseHelper(this);
         mDatabaseHelper.createDataBase();
+        mDatabaseHelper.updateFavToFalse();
 
         mButtonGame = findViewById(R.id.btn_game_main);
         mButtonGame.setOnClickListener(new View.OnClickListener() {

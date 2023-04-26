@@ -74,7 +74,6 @@
         android:layout_marginTop="70dp"
         android:layout_marginBottom="70dp"
         android:background="@drawable/bg_purple"
-        android:text="hi"
         android:clickable="false"
         android:focusable="false"
         android:gravity="center"
