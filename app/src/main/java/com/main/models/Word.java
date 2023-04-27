@@ -2,12 +2,20 @@ package com.main.models;
 
 public class Word {
     private int id;
-    private String word;
-    private String html;
-    private String description;
-    private String pronounce;
-    private boolean fav;
+    private String word ="";
+    private String html ="word_error";
+    private String description = "";
+    private String pronounce = "";
+    private boolean fav ;
 
+    public Word(String word){
+        this.word = word;
+        this.description = "không tìm thấy trong database";
+        this.html = "word_error";
+    }
+    public Word(){
+
+    }
     public int getId() {
         return id;
     }

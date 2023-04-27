@@ -38,17 +38,22 @@ import com.main.adapters.WordAdapter;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 
-public class SearchAllFragment extends Fragment {
+public class SearchAllFragment  extends Fragment{
 
     private AutoCompleteTextView mAutoTxtSearchAll;
     private DatabaseHelper mDatabaseHelper;
@@ -219,6 +224,7 @@ public class SearchAllFragment extends Fragment {
         });
     }
 
+    // các hàm để xử lý lấy text từ hình ảnh
     private void pickGallery() {
         //intent to take image from gallery
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -237,6 +243,11 @@ public class SearchAllFragment extends Fragment {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE);
     }
+
+
+
+    // các hàm để xử lý lấy text từ hình ảnh
+    //end
 
     private void requestStoragePermission() {
         ActivityCompat.requestPermissions(getActivity(), storagePermission, STORAGE_REQUEST_CODE);
@@ -258,7 +269,6 @@ public class SearchAllFragment extends Fragment {
         boolean result = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
         boolean result1 = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result && result1;
-
     }
 
     //call displayWordActivity class
@@ -291,18 +301,18 @@ public class SearchAllFragment extends Fragment {
         }
 
         switch (requestCode) {
-            //case voice to text
+            //trường hợp voice to text
             case REQUEST_CODE_SPEECH_INPUT: {
                 if (resultCode == RESULT_OK && data != null) {
-                    //get text data from voice intent
+                    //lấy text từ intent voice
                     ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    //set to text view
+                    //set text to view
                     getDescription(result.get(0));
                 }
                 break;
             }
 
-            //get cropped image
+            //lấy ảnh đã cắt
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE: {
                 CropImage.ActivityResult result = CropImage.getActivityResult(data);
                 if (resultCode == RESULT_OK) {
@@ -321,22 +331,24 @@ public class SearchAllFragment extends Fragment {
                         Frame frame = new Frame.Builder().setBitmap(bitmap).build();
                         SparseArray<TextBlock> items = textRecognizer.detect(frame);
                         StringBuilder sb = new StringBuilder();
-                        //get text from sb until there is no text
+                        //get text từ sb cho đến khi không còn text
                         for (int i = 0; i < items.size(); i++) {
                             TextBlock myItem = items.valueAt(i);
                             sb.append(myItem.getValue());
                         }
-                        //call displayWord by text
-                        getDescription(sb.toString());
+                        //gọi displayWord bằng sb
+                        if (sb != null && !sb.toString().isEmpty()) {
+                            //call displayWord by text
+                            getDescription(sb.toString());
+                        }
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                    //if there any error show it
+                    //nếu có lỗi thì sẽ hiển thị ra lỗi
                     Exception error = result.getError();
                     Toast.makeText(getContext(), "" + error, Toast.LENGTH_SHORT).show();
                 }
+                break;
             }
-            break;
-
             case REQUEST_CODE_CHANGED_STATUS:{
                 Intent i = new Intent(getActivity(), FavoriteActivity.class);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

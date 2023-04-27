@@ -1,5 +1,6 @@
 package com.main.activities;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -8,6 +9,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.main.R;
 import com.main.adapters.WordAdapter;
@@ -47,6 +49,12 @@ public class DisplayWordActivity extends AppCompatActivity {
 
         //get word, html, fav by word
         mWord = mDatabaseHelper.displayWord(getIntent().getStringExtra("word"));
+
+        if(mWord.getHtml() == "word_error") {
+            Toast.makeText(this, "Không tìm thấy từ trong database", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(DisplayWordActivity.this, MainActivity.class);
+            startActivity(i);
+        }
         setData();
 
         //Handle whether favorite column
