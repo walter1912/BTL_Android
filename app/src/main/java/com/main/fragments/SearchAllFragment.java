@@ -327,15 +327,24 @@ public class SearchAllFragment extends Fragment {
                             sb.append(myItem.getValue());
                         }
                         //call displayWord by text
-                        getDescription(sb.toString());
+                        if (sb.toString().isEmpty()) {
+                            Toast.makeText(getContext(), "Không tìm thấy từ, mời thử lại", Toast.LENGTH_SHORT).show();
+                        }
+//                        else if()
+                        else {
+                            //call displayWord by text
+                            getDescription(sb.toString());
+                        }
+
                     }
                 } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                     //if there any error show it
                     Exception error = result.getError();
                     Toast.makeText(getContext(), "" + error, Toast.LENGTH_SHORT).show();
                 }
+                break;
             }
-            break;
+
 
             case REQUEST_CODE_CHANGED_STATUS:{
                 Intent i = new Intent(getActivity(), FavoriteActivity.class);

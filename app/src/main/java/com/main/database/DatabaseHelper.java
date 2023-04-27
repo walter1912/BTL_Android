@@ -162,6 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 ans.setFav(false);
             }
         }
+        Log.d("ans", ans);
         return ans;
     }
 

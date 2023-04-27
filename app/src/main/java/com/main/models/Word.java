@@ -55,4 +55,17 @@ public class Word {
     public void setFav(boolean fav) {
         this.fav = fav;
     }
+
+
+    @Override
+    public String toString() {
+        return "Word{" +
+                "id=" + id +
+                ", word='" + word + '\'' +
+                ", html='" + html + '\'' +
+                ", description='" + description + '\'' +
+                ", pronounce='" + pronounce + '\'' +
+                ", fav=" + fav +
+                '}';
+    }
 }
