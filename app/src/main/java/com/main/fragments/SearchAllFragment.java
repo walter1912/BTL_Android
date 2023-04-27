@@ -13,10 +13,12 @@ import android.provider.MediaStore;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -86,7 +88,7 @@ public class SearchAllFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 1) {
-                    mAutoTxtSearchAll.setAdapter(new ArrayAdapter<String>(getActivity(),
+                    mAutoTxtSearchAll.setAdapter(new ArrayAdapter<>(getActivity(),
                             android.R.layout.simple_list_item_1, mDatabaseHelper.getEngWord(s.toString())));
                 }
             }
@@ -96,6 +98,34 @@ public class SearchAllFragment extends Fragment {
 
             }
         });
+
+        mAutoTxtSearchAll.setOnClickListener(v -> {
+            // Xử lý khi AutoCompleteTextView được click
+            CharSequence searchText = mAutoTxtSearchAll.getText(); // Lấy dữ liệu từ AutoCompleteTextView
+
+            if (searchText.length() >= 1) {
+                mAutoTxtSearchAll.setAdapter(new ArrayAdapter<>(getActivity(),
+                        android.R.layout.simple_list_item_1, mDatabaseHelper.getEngWord(searchText.toString())));
+
+                // Hiển thị danh sách gợi ý
+                mAutoTxtSearchAll.showDropDown();
+            }
+        });
+
+        mAutoTxtSearchAll.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // Lấy danh sách gợi ý
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) mAutoTxtSearchAll.getAdapter();
+                if (adapter != null && adapter.getCount() > 0) {
+                    // Chọn item đầu tiên
+                    String firstItem = adapter.getItem(0);
+                    getDescription(firstItem);
+                }
+                return true;
+            }
+            return false;
+        });
+
 
         //Handle item of the list
         mAutoTxtSearchAll.setOnItemClickListener(new AdapterView.OnItemClickListener() {

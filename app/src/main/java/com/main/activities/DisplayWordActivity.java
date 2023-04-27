@@ -40,8 +40,8 @@ public class DisplayWordActivity extends AppCompatActivity {
 
         mDatabaseHelper = new DatabaseHelper(this);
 
-        mTxtWord = (TextView) findViewById(R.id.txt_word);
-        mTxtAns = (TextView) findViewById(R.id.txt_ans);
+        mTxtWord = findViewById(R.id.txt_word);
+        mTxtAns = findViewById(R.id.txt_ans);
 
         mTxtAns.setMovementMethod(new ScrollingMovementMethod());
 

@@ -28,9 +28,9 @@
 
         <TextView
             android:id="@+id/txt_word"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:textSize="30sp"
             android:textColor="@color/white"/>
@@ -40,7 +40,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_action_sound"
             app:tint="@color/colorPrimary"
             android:background="@drawable/search_icon_background"
@@ -53,7 +53,7 @@
             android:layout_gravity="center"
             app:tint="@color/colorPrimary"
             android:background="@drawable/search_icon_background"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
 
             android:src="@drawable/ic_action_bookmark"
             android:contentDescription="search_icon_background"

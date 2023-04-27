@@ -50,6 +50,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+    public void updateFavToFalse() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("fav", "FALSE"); // giá trị mới của cột fav
+
+        int rowsAffected = db.update(AV_TABLE, values, null, null);
+        // rowsAffected chứa số lượng hàng bị ảnh hưởng bởi phép cập nhật
+
+        db.close();
+    }
+
+
     public void createDataBase(){
         //If the database does not exist, copy it from the assets.
 
