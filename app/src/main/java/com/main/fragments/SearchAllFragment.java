@@ -42,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -62,7 +63,7 @@ public class SearchAllFragment  extends Fragment{
     Button mDialogBtnCamera;
     Button mDialogBtnGallery;
     ImageView mPreviewIv;
-    private WordAdapter dataAdapter;
+//    private WordAdapter dataAdapter;
 
     private static final int REQUEST_CODE_CHANGED_STATUS = 10;
     private static final int REQUEST_CODE_SPEECH_INPUT = 2;
@@ -83,7 +84,7 @@ public class SearchAllFragment  extends Fragment{
         mAutoTxtSearchAll  = view.findViewById(R.id.searchAll);
         mDatabaseHelper = new DatabaseHelper(getActivity());
 
-        //search the whole vocabulary
+        // tìm kiếm toàn bộ từ vựng
         mAutoTxtSearchAll.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -132,16 +133,13 @@ public class SearchAllFragment  extends Fragment{
         });
 
 
-        //Handle item of the list
-        mAutoTxtSearchAll.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String mWord = (String) parent.getItemAtPosition(position);
-                getDescription(mWord);
-            }
+        // xử lý item trong list auto text
+        mAutoTxtSearchAll.setOnItemClickListener((parent, view1, position, id) -> {
+            String mWord = (String) parent.getItemAtPosition(position);
+            getDescription(mWord);
         });
 
-        //event search by voice
+        // tìm bằng giọng nói
         mButtonVoice = view.findViewById(R.id.button_voice);
         mButtonVoice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,16 +149,11 @@ public class SearchAllFragment  extends Fragment{
 
         });
 
-        //define image view to set image when take a photo
+        // định nghĩa image view để set image khi chụp ảnh
         mPreviewIv = view.findViewById(R.id.imageIv);
-        //event search by taking a photo
+        // nút camera
         mBtnCamera = view.findViewById(R.id.button_camera);
-        mBtnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showImageImportDialog();
-            }
-        });
+        mBtnCamera.setOnClickListener(v -> showImageImportDialog());
 
         //camera permission
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -170,7 +163,7 @@ public class SearchAllFragment  extends Fragment{
         return view;
     }
 
-    //Handle voice to text
+    // xử lý voice to text
     private void speak() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -184,60 +177,54 @@ public class SearchAllFragment  extends Fragment{
         }
     }
 
-    //Show dialog to select camera or gallery
+    // Hiện dialog để chọn camera hay gallery
     private void showImageImportDialog() {
         Dialog dialogCamera = new Dialog(getContext());
         dialogCamera.setContentView(R.layout.dialog_choose_camera);
         dialogCamera.getWindow().setBackgroundDrawableResource(R.drawable.dialog_bg_choose_camera);
         dialogCamera.show();
 
-        mDialogBtnCamera = (Button) dialogCamera.findViewById(R.id.btn_camera);
-        mDialogBtnCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //camera option click
-                if(!checkCameraPermission()){
-                    //camera permission not allowed, request it
-                    requestCameraPermission();
-                }else{
-                    //permission allowed, take picture
-                    pickCamera();
-                }
-                dialogCamera.dismiss();
+        mDialogBtnCamera = dialogCamera.findViewById(R.id.btn_camera);
+        mDialogBtnCamera.setOnClickListener(v -> {
+            //camera option click
+            if(!checkCameraPermission()){
+                // yêu cầu quyền truy cập máy ảnh nếu không được phép
+                requestCameraPermission();
+            }else{
+                // chụp ảnh khi được truy cập
+                pickCamera();
             }
+            dialogCamera.dismiss();
         });
 
-        mDialogBtnGallery = (Button) dialogCamera.findViewById(R.id.btn_gallery);
-        mDialogBtnGallery.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //gallery option click
-                if(!checkStoragePermission()){
-                    //storage permission not allowed, request it
-                    requestStoragePermission();
-                }else{
-                    //permission allowed, take picture
-                    pickGallery();
-                }
-                dialogCamera.dismiss();
+        mDialogBtnGallery = dialogCamera.findViewById(R.id.btn_gallery);
+        mDialogBtnGallery.setOnClickListener(v -> {
+            //gallery option click
+            if(!checkStoragePermission()){
+                // yêu cầu quyền truy cập gallery nếu không được phép
+                requestStoragePermission();
+            }else{
+                // lấy ảnh khi được truy cập
+                pickGallery();
             }
+            dialogCamera.dismiss();
         });
     }
 
     // các hàm để xử lý lấy text từ hình ảnh
     private void pickGallery() {
-        //intent to take image from gallery
+        //intent để lấy image từ gallery
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
     }
 
     private void pickCamera() {
-        //intent to take image from camera, it will also be save to get high quality image
+        //intent để lấy ảnh camera, nó sẽ được lưu lại để có ảnh chất lượng cao
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "NewPic"); //title of picture
         values.put(MediaStore.Images.Media.DESCRIPTION, "Image To Text"); //description
-        image_uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        image_uri = requireActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);

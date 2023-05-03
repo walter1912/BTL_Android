@@ -64,14 +64,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public void createDataBase(){
-        //If the database does not exist, copy it from the assets.
+        // nếu database không tồn tại thì copy từ assets
 
         boolean mDataBaseExist = checkDataBase();
         if (!mDataBaseExist) {
             this.getReadableDatabase();
             this.close();
             try {
-                //Copy the database from assests
+                //Copy the database từ assests
                 copyDataBase();
                 Log.e(TAG, "createDatabase database created");
             } catch (IOException mIOException) {
@@ -99,14 +99,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return dbFile.exists();
     }
 
-    //Open the database, so we can query it
-    public boolean openDataBase() throws SQLException {
-        String mPath = DB_PATH + DB_NAME;
-        //Log.v("mPath", mPath);
-        mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
-        //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
-        return mDataBase != null;
-    }
+    //Open the database
+//    public boolean openDataBase() throws SQLException {
+//        String mPath = DB_PATH + DB_NAME;
+//        //Log.v("mPath", mPath);
+//        mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+//        //mDataBase = SQLiteDatabase.openDatabase(mPath, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);
+//        return mDataBase != null;
+//    }
 
     @Override
     public synchronized void close() {
@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super.close();
     }
 
-    //Get English words that like the input word
+    // lấy từ tiếng anh giống từ trong input
     public ArrayList<String> getEngWord(String query){
         ArrayList<String> engList= new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return engList;
     }
 
-    //Display word by html column
+    // hiển thị từ bằng cột html
     public Word displayWord(String word) {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
 
@@ -156,11 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ans.setHtml(cursor.getString(cursor.getColumnIndex("html")));
             ans.setWord(cursor.getString(cursor.getColumnIndex("word")));
             String fav = cursor.getString(cursor.getColumnIndex("fav"));
-            if(fav.equals("TRUE")){
-                ans.setFav(true);
-            }else{
-                ans.setFav(false);
-            }
+            ans.setFav(fav.equals("TRUE"));
         }
         Log.d("ans: ", String.valueOf(ans));
         if(ans.getWord() == null) {
@@ -169,7 +165,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return ans;
     }
 
-    //Display word by html column _ p2
+    // hiển thị từ bằng cột html _ p2
     public String getDescription(String word){
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         String ans = null;
@@ -183,7 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Html.fromHtml(ans).toString();
     }
 
-    //Get all the whole favorite word
+    // lấy tất cả các từ yêu thích
     public ArrayList<Word> getAllFavWord(){
         ArrayList<Word> favWordList = new ArrayList<>();
         ;
@@ -198,11 +194,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     word.setHtml(cursor.getString(cursor.getColumnIndex("html")));
                     word.setDescription(cursor.getString(cursor.getColumnIndex("description")));
                     String fav = cursor.getString(cursor.getColumnIndex("fav"));
-                    if(fav.equals("TRUE")){
-                        word.setFav(true);
-                    }else{
-                        word.setFav(false);
-                    }
+                    word.setFav(fav.equals("TRUE"));
                     favWordList.add(word);
                 }while (cursor.moveToNext());
             }
@@ -227,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null);
     }
 
-    ////Get English FAVORITE words that like the input word
+    // lấy từ yêu thích giống với input
     public ArrayList<String> getFavEngWord(String query){
         ArrayList<String> engList= new ArrayList<>();
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
@@ -249,7 +241,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return engList;
     }
 
-    //Quiz game
+    //Quiz
     public ArrayList<Question> getAllQuestion(int number){
         ArrayList<Question> questionList = new ArrayList<Question>(number);
         mDataBase= this.getReadableDatabase();
@@ -270,7 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return questionList;
     }
 
-    //New word - new day
+    // từ mới mỗi ngày
     public Cursor getNewWord() {
         SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
         Cursor mCursor = sqLiteDatabase.query(AV_TABLE, new String[] {"rowid _id",WORD,DES},

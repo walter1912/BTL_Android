@@ -17,6 +17,7 @@ import com.main.database.DatabaseHelper;
 import com.main.models.Word;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -27,17 +28,18 @@ public class DisplayWordActivity extends AppCompatActivity {
     private ImageView mBtnBookMark, mBtnSound;
     private DatabaseHelper mDatabaseHelper;
     private Word mWord;
-    private WordAdapter dataAdapter;
+//    private WordAdapter dataAdapter;
 
     TextToSpeech mTextToSpeech;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+//    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_word);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         mDatabaseHelper = new DatabaseHelper(this);
@@ -47,33 +49,28 @@ public class DisplayWordActivity extends AppCompatActivity {
 
         mTxtAns.setMovementMethod(new ScrollingMovementMethod());
 
-        //get word, html, fav by word
+        //Lấy đối tượng Word bằng word được truyền vào
         mWord = mDatabaseHelper.displayWord(getIntent().getStringExtra("word"));
 
-        if(mWord.getHtml() == "word_error") {
+        if(Objects.equals(mWord.getHtml(), "word_error")) {
             Toast.makeText(this, "Không tìm thấy từ trong database", Toast.LENGTH_SHORT).show();
             Intent i = new Intent(DisplayWordActivity.this, MainActivity.class);
             startActivity(i);
         }
+
+        // set dữ liệu cho layout
         setData();
 
-        //Handle whether favorite column
-        mBtnBookMark = (ImageView) findViewById(R.id.btn_book_mark);
+        // Xử lý sự kiện trên btn_book_mark
+        mBtnBookMark = findViewById(R.id.btn_book_mark);
         setColorBtnBookMark();
-        mBtnBookMark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDatabaseHelper.updateFav(mWord.isFav(), mWord.getId());
-                if(mWord.isFav()){
-                    mWord.setFav(false);
-                }else {
-                    mWord.setFav(true);
-                }
-                setColorBtnBookMark();
-            }
+        mBtnBookMark.setOnClickListener(v -> {
+            mDatabaseHelper.updateFav(mWord.isFav(), mWord.getId());
+            mWord.setFav(!mWord.isFav());
+            setColorBtnBookMark();
         });
 
-        //Handle sound of word
+        // Xử lý sự kiện trên btn_sound
         mBtnSound = findViewById(R.id.btn_sound);
         mBtnSound.setOnClickListener(v ->
                 mTextToSpeech = new TextToSpeech(getApplicationContext(), status -> {
@@ -87,9 +84,9 @@ public class DisplayWordActivity extends AppCompatActivity {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+//    @RequiresApi(api = Build.VERSION_CODES.M)
     private void setColorBtnBookMark() {
-        //check fav to change color for book mark
+        //check fav để đổi màu book mark
         if(mWord.isFav()) {
             mBtnBookMark.setColorFilter(getColor(R.color.colorIsFav));
         }else {

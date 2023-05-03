@@ -34,7 +34,7 @@ public class GameActivity extends AppCompatActivity {
     private static final String KEY_KEYS = "key_keys";
     private static final String KEY_CURRENT_ANSWER = "current_answer";
     public static final String EXTRA_SCORE = "extra_score";
-    public static final String EXTRA_CONGRATULATION = "start_activity_congratulation";
+//    public static final String EXTRA_CONGRATULATION = "start_activity_congratulation";
 
     //dialog boss
     private static final String SHARED_PREFS = "shared_prefs";
@@ -63,8 +63,9 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_main);
 
-        //hide actionBar
+        // ẩn actionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
@@ -211,6 +212,7 @@ public class GameActivity extends AppCompatActivity {
             numToGameOver++;
             isReloadBrick = true;
             showGame(savedInstanceState);
+            // thua
             if(numToGameOver == 2){
                 Toast.makeText(GameActivity.this, "Game over",Toast.LENGTH_SHORT).show();
                 DialogGameOver();
@@ -289,9 +291,9 @@ public class GameActivity extends AppCompatActivity {
         //dialog boss
         TextView textTitle = dialog.findViewById(R.id.text_back_to_home);
         textTitle.setOnClickListener(v -> {
-            //back to home
+            // quay lại home
             Intent intent = new Intent(GameActivity.this, StartGameScreenActivity.class);
-            //clear all last activity
+            // xóa tất cả các activity trước
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             dialog.dismiss();
@@ -299,7 +301,7 @@ public class GameActivity extends AppCompatActivity {
 
         TextView button = dialog.findViewById(R.id.button_play_again);
         button.setOnClickListener(v -> {
-            //play again: CALL itself
+            //play again: gọi lại chính activity này
             Intent intent = new Intent(GameActivity.this, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

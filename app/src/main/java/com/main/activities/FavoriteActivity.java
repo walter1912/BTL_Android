@@ -23,7 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class FavoriteActivity extends AppCompatActivity {
 
-    private static final int REQUEST_CODE_CHANGED_STATUS = 10;
+//    private static final int REQUEST_CODE_CHANGED_STATUS = 10;
 
     AutoCompleteTextView mAutoTxtSearchFav;
     private ListView listViewFavWord;
@@ -39,30 +39,28 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         mAutoTxtSearchFav = findViewById(R.id.searchFav);
-        listViewFavWord  = (ListView) findViewById(R.id.list_fav_word);
+        listViewFavWord  = findViewById(R.id.list_fav_word);
 
         mDatabaseHelper = new DatabaseHelper(this);
         textAnswers = mDatabaseHelper.getAllFavWord();
         dataAdapter = new WordAdapter(FavoriteActivity.this, textAnswers);
 
-        // Assign adapter to ListView
+        // set adapter cho ListView
         listViewFavWord.setAdapter(dataAdapter);
-        //display a description of word when click on it
-        listViewFavWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                getDescription(textAnswers.get(position).getWord());
-                dataAdapter = new WordAdapter(FavoriteActivity.this, textAnswers);
+        // Hiển thị nghĩa của từ trong list view khi ấn vào nó
+        listViewFavWord.setOnItemClickListener((parent, view, position, id) -> {
+            getDescription(textAnswers.get(position).getWord());
+            dataAdapter = new WordAdapter(FavoriteActivity.this, textAnswers);
 
-                // Assign adapter to ListView
-                listViewFavWord.setAdapter(dataAdapter);
-            }
+            // set adapter cho ListView
+            listViewFavWord.setAdapter(dataAdapter);
         });
 
-        //Search the favorite word
+        // tìm trong các từ yêu thích
         mAutoTxtSearchFav.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -72,7 +70,7 @@ public class FavoriteActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 1) {
-                    mAutoTxtSearchFav.setAdapter(new ArrayAdapter<String>(FavoriteActivity.this,
+                    mAutoTxtSearchFav.setAdapter(new ArrayAdapter<>(FavoriteActivity.this,
                             android.R.layout.simple_list_item_1, mDatabaseHelper.getFavEngWord(s.toString())));
                 }
             }
@@ -82,15 +80,13 @@ public class FavoriteActivity extends AppCompatActivity {
 
             }
         });
-        mAutoTxtSearchFav.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String mWord = (String) parent.getItemAtPosition(position);
-                getDescription(mWord);
-            }
+
+        mAutoTxtSearchFav.setOnItemClickListener((parent, view, position, id) -> {
+            String mWord = (String) parent.getItemAtPosition(position);
+            getDescription(mWord);
         });
 
-        //Call learn vocabulary act
+        // Nút học từ vụng
         mBtnLearn = findViewById(R.id.btn_learn);
         mBtnLearn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,15 +97,12 @@ public class FavoriteActivity extends AppCompatActivity {
             }
         });
 
-        //Call game activity
+        // Nút game
         mBtnGame = findViewById(R.id.btn_game);
-        mBtnGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(FavoriteActivity.this, StartGameScreenActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-            }
+        mBtnGame.setOnClickListener(v -> {
+            Intent i = new Intent(FavoriteActivity.this, StartGameScreenActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         });
     }
     public void getDescription(String word) {
@@ -123,7 +116,7 @@ public class FavoriteActivity extends AppCompatActivity {
         super.onRestart();
         textAnswers = mDatabaseHelper.getAllFavWord();
         dataAdapter = new WordAdapter(FavoriteActivity.this, textAnswers);
-        // Assign adapter to ListView
+        // set adapter cho ListView
         listViewFavWord.setAdapter(dataAdapter);
     }
 }

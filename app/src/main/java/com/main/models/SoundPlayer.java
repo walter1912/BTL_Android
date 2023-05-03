@@ -18,7 +18,7 @@ public class SoundPlayer {
     private static  int countdownTime;
 
     public SoundPlayer(Context context){
-// kiểm tra API của thiết bị (LOLIPOP =  21)
+// kiểm tra API của thiết bị
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 
             mAudioAttributes = new AudioAttributes.Builder()

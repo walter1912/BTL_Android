@@ -27,22 +27,20 @@ public class StartGameScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_game_screen);
 
-        //hide actionBar
+        // ẩn actionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
-        mGo = (Button) findViewById(R.id.button_go);
-        mGo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //call GameActivity.class
-                Intent i = new Intent(StartGameScreenActivity.this, GameActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(i, REQUEST_CODE_QUIZ);
-            }
+        mGo = findViewById(R.id.button_go);
+        mGo.setOnClickListener(v -> {
+            // gọi GameActivity
+            Intent i = new Intent(StartGameScreenActivity.this, GameActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(i, REQUEST_CODE_QUIZ);
         });
 
-        mHighScore = (TextView) findViewById(R.id.text_view_highscore);
+        mHighScore = findViewById(R.id.text_view_highscore);
         loadHighScore();
     }
 

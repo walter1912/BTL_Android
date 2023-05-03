@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 public class StartingScreenActivity extends AppCompatActivity {
-    private static final int REQUEST_CODE_QUIZ = 1;
+//    private static final int REQUEST_CODE_QUIZ = 1;
     public static final String EXTRA_DIFFICULTY = "extraDifficulty";
     public static final String SHARED_PREFS = "sharedPrefs";
     public static final String EXTRA_SCORE = "extraScore";
@@ -33,8 +33,9 @@ public class StartingScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //hide actionBar
+        // ẩn actionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -70,12 +71,7 @@ public class StartingScreenActivity extends AppCompatActivity {
         loadHighscore();
         Button buttonStartQuiz = findViewById(R.id.button_start_quiz);
         buttonStartQuiz.setTypeface(tf2);
-        buttonStartQuiz.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startQuiz();
-            }
-        });
+        buttonStartQuiz.setOnClickListener(v -> startQuiz());
     }
 
     @Override

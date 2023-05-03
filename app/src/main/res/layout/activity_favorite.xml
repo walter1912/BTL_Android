@@ -113,8 +113,8 @@
             android:id="@+id/btn_learn"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1"
             android:background="@drawable/bg_btn_fav"
             android:text="@string/btn_learn"
@@ -126,14 +126,15 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_bookmark"
-            app:layout_constraintVertical_bias="0.866"/>
+            app:layout_constraintVertical_bias="0.866"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/btn_game"
             android:layout_width="100dp"
             android:layout_height="60dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="50dp"
             android:layout_weight="1"
             android:background="@drawable/bg_btn_fav"
             android:text="@string/btn_game"
@@ -146,7 +147,8 @@
             app:layout_constraintStart_toEndOf="@+id/btn_learn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/list_bookmark"
-            app:layout_constraintVertical_bias="0.877"/>
+            app:layout_constraintVertical_bias="0.877"
+            style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>
 </LinearLayout>

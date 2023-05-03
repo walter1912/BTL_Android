@@ -40,7 +40,8 @@ public class FloatingWindow extends Service implements View.OnClickListener{
     ImageView imageClose;
     AutoCompleteTextView mAutoCompleteTextView;
     TextView mAns;
-    private ImageView mBtnBookMark,mBtnSound;
+//    private ImageView mBtnBookMark;
+    private ImageView mBtnSound;
     private View layoutcollapsed_widget;
     private View layoutexpanded_widget;
     float height, width;
@@ -65,7 +66,7 @@ public class FloatingWindow extends Service implements View.OnClickListener{
             LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_PHONE;
         }
 
-        //Database & array list to show word
+        //Database và array list để hiển thị từ
         mDatabaseHelper = new DatabaseHelper(this);
         mDatabaseHelper.createDataBase();
         mList = new ArrayList<>();
@@ -81,12 +82,12 @@ public class FloatingWindow extends Service implements View.OnClickListener{
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 
-        //initial position _ vi tri cua floating window
+        //initial position _ vị trí cua floating window
         layoutParams.gravity= Gravity.TOP|Gravity.RIGHT;
         layoutParams.x = 0;
         layoutParams.y = 100;
 
-        //layout params for close button - vi tri cua nut close duoi man hinh khi muon tat di
+        //layout params for close button - vị trí của nút close dưới màn hình khi muốn tắt đi
         WindowManager.LayoutParams imageParams =  new WindowManager.LayoutParams(140,
                 140,
                 LAYOUT_FLAG,
@@ -108,21 +109,21 @@ public class FloatingWindow extends Service implements View.OnClickListener{
         width = windowManager.getDefaultDisplay().getWidth();
 
 
-        //getting the collapsed and expanded view from the floating view
+        // lấy collapsed và expanded view từ floating view
         layoutcollapsed_widget = mFloatingView.findViewById(R.id.layoutCollapsed);
         layoutexpanded_widget = mFloatingView.findViewById(R.id.layoutExpanded);
 
-        //adding click listener to close view
+        // thêm click listener cho close view
         mFloatingView.findViewById(R.id.buttonClose).setOnClickListener(this);
 
         //AutoCompleteTextView
-        // Show word's description
+        // Hiển thị description của từ
         mAutoCompleteTextView = mFloatingView.findViewById(R.id.auto_txt);
 
         //TextView _ show description
         mAns = mFloatingView.findViewById(R.id.txt_ans);
         mAns.setMovementMethod(new ScrollingMovementMethod());
-        //Handle sound of word
+        // Xử lý nút sound
         mBtnSound = mFloatingView.findViewById(R.id.btn_sound);
         mBtnSound.setVisibility(View.GONE);
 
@@ -136,7 +137,7 @@ public class FloatingWindow extends Service implements View.OnClickListener{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 1) {
-                    mAutoCompleteTextView.setAdapter(new ArrayAdapter<String>(FloatingWindow.this,
+                    mAutoCompleteTextView.setAdapter(new ArrayAdapter<>(FloatingWindow.this,
                             android.R.layout.simple_list_item_1, mDatabaseHelper.getEngWord(s.toString())));
                 }
                 mAutoCompleteTextView.setThreshold(1);
@@ -148,63 +149,53 @@ public class FloatingWindow extends Service implements View.OnClickListener{
             }
         });
 
-        mAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String word = (String) parent.getItemAtPosition(position);
-                ans = mDatabaseHelper.getDescription(word);
-                mAns.setText(ans);
-                mBtnSound.setVisibility(View.VISIBLE);
-                mBtnSound.setOnClickListener(v ->
-                        mTextToSpeech = new TextToSpeech(getApplicationContext(), status -> {
-                            if(status == TextToSpeech.SUCCESS){
-                                //Setting language
-                                mTextToSpeech.setLanguage(Locale.UK);
-                                mTextToSpeech.setSpeechRate(1.0f);
-                                mTextToSpeech.speak(word, TextToSpeech.QUEUE_ADD, null);
-                            }
-                        }));
+        mAutoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
+            String word = (String) parent.getItemAtPosition(position);
+            ans = mDatabaseHelper.getDescription(word);
+            mAns.setText(ans);
+            mBtnSound.setVisibility(View.VISIBLE);
+            mBtnSound.setOnClickListener(v ->
+                    mTextToSpeech = new TextToSpeech(getApplicationContext(), status -> {
+                        if(status == TextToSpeech.SUCCESS){
+                            //Setting language
+                            mTextToSpeech.setLanguage(Locale.UK);
+                            mTextToSpeech.setSpeechRate(1.0f);
+                            mTextToSpeech.speak(word, TextToSpeech.QUEUE_ADD, null);
+                        }
+                    }));
 
-                WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = layoutParams;
-                floatWindowLayoutParamUpdateFlag.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+            WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = layoutParams;
+            floatWindowLayoutParamUpdateFlag.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
-                // The Layout Flag is changed back to FLAG_NOT_FOCUSABLE. and the Layout is updated with new Flag
-                windowManager.updateViewLayout(mFloatingView, floatWindowLayoutParamUpdateFlag);
+            // Layout Flag được đổi lại thành FLAG_NOT_FOCUSABLE và layout được update với flag mới
+            windowManager.updateViewLayout(mFloatingView, floatWindowLayoutParamUpdateFlag);
 
-                // INPUT_METHOD_SERVICE with Context is used
-                // to retrieve a InputMethodManager for
-                // accessing input methods which is the soft keyboard here
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            // INPUT_METHOD_SERVICE với Context được sử dụng để truy xuất
+            // một InputMethodManager để truy cập các phương thức nhập (ở đây là soft keyboard)
+            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-                // The soft keyboard slides back in
-                inputMethodManager.hideSoftInputFromWindow(mFloatingView.getApplicationWindowToken(), 0);
-            }
+            // soft keyboard trượt về
+            inputMethodManager.hideSoftInputFromWindow(mFloatingView.getApplicationWindowToken(), 0);
         });
 
-        // Floating Window Layout Flag is set to FLAG_NOT_FOCUSABLE,
-        // so no input is possible to the EditText. But that's a problem.
-        // So, the problem is solved here. The Layout Flag is
-        // changed when the EditText is touched.
-        mAutoCompleteTextView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                mAutoCompleteTextView.setCursorVisible(true);
-                WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = layoutParams;
-                // Layout Flag is changed to FLAG_NOT_TOUCH_MODAL which
-                // helps to take inputs inside floating window, but
-                // while in EditText the back button won't work and
-                // FLAG_LAYOUT_IN_SCREEN flag helps to keep the window
-                // always over the keyboard
-                floatWindowLayoutParamUpdateFlag.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+        // Floating Window Layout Flag được đặt thành FLAG_NOT_FOCUSABLE,
+        // để không thể nhập văn bản vào EditText. Nhưng đó cũng là 1 vấn đề.
+        // cách giải quyết:
+        // Layout Flag thay đổi khi EditText được chạm vào.
+        mAutoCompleteTextView.setOnTouchListener((v, event) -> {
+            mAutoCompleteTextView.setCursorVisible(true);
+            WindowManager.LayoutParams floatWindowLayoutParamUpdateFlag = layoutParams;
+            // Layout Flag được đổi thành FLAG_NOT_TOUCH_MODAL để lấy inputs trong floating window
+            // nhưng khi ở trong EditText, nút back không hoạt động và
+            // FLAG_LAYOUT_IN_SCREEN flag giúp floating window luôn ở trên bàn phím
+            floatWindowLayoutParamUpdateFlag.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
-                // WindowManager is updated with the Updated Parameters
-                windowManager.updateViewLayout(mFloatingView, floatWindowLayoutParamUpdateFlag);
-                return false;
-            }
+            // Cập nhật các tham số của WindowManager
+            windowManager.updateViewLayout(mFloatingView, floatWindowLayoutParamUpdateFlag);
+            return false;
         });
 
-        //adding an touch listener to make drag movement of the floating widget
+        // thêm touch listener để tạo chuyển động kéo của floating widget
         mFloatingView.findViewById(R.id.layout_floating).setOnTouchListener(new View.OnTouchListener() {
             int initialX, initialY;
             float initialTouchX, initialTouchY;
@@ -215,7 +206,7 @@ public class FloatingWindow extends Service implements View.OnClickListener{
 
                 switch (event.getAction())
                 {
-                    //Press on logo
+                    // Nhấn vào logo
                     case MotionEvent.ACTION_DOWN:
 
                         imageClose.setVisibility(View.VISIBLE);
@@ -223,7 +214,7 @@ public class FloatingWindow extends Service implements View.OnClickListener{
                         initialX= layoutParams.x;
                         initialY=layoutParams.y;
 
-                        //touch position:
+                        // vị trí chạm:
                         initialTouchX= event.getRawX();
                         initialTouchY= event.getRawY();
 
@@ -232,7 +223,7 @@ public class FloatingWindow extends Service implements View.OnClickListener{
                         
                     case MotionEvent.ACTION_UP:
 
-                        //when the drag is ended switching the state of the widget
+                        // khi quá trình kéo kết thúc chuyển đổi trạng thái của widget
                         layoutcollapsed_widget.setVisibility(View.GONE);
                         layoutexpanded_widget.setVisibility(View.VISIBLE);
                         imageClose.setVisibility(View.GONE);
@@ -240,19 +231,18 @@ public class FloatingWindow extends Service implements View.OnClickListener{
                         layoutParams.x = initialX +(int)(initialTouchY-event.getRawX());
                         layoutParams.y = initialY + (int)(event.getRawY() - initialTouchY);
 
-                        //remove widget
+                        // xóa widget
                         if(layoutParams.y > (height * 0.6)) {
                                 stopSelf();
                         }
                         return true;
-
-                        //move logo
+                        // xóa logo
                     case MotionEvent.ACTION_MOVE:
-                        //calculate X & Y coordinates of view
+                        // tính tọa độ X và Y của view
                         layoutParams.x= initialX + (int)(initialTouchX-event.getRawX());
                         layoutParams.y = initialY + (int) (event.getRawY() - initialTouchY);
 
-                        //update layout with new coordinates
+                        //update layout với tọa độ mới
                         windowManager.updateViewLayout(mFloatingView,layoutParams);
 
                         if (layoutParams.y > (height * 0.6)){
@@ -283,7 +273,8 @@ public class FloatingWindow extends Service implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.buttonClose) {//switching views
+        if (v.getId() == R.id.buttonClose) {
+            //switching views
             layoutcollapsed_widget.setVisibility(View.VISIBLE);
             layoutexpanded_widget.setVisibility(View.GONE);
         }

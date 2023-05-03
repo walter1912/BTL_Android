@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -66,8 +67,9 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        //hide actionBar
+        // ẩn actionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 
         sound = new SoundPlayer(this);
@@ -100,7 +102,7 @@ public class QuizActivity extends AppCompatActivity {
         dbHelper.createDataBase();
 
         Intent intent= getIntent();
-        String level= intent.getStringExtra(StartingScreenActivity.EXTRA_DIFFICULTY);
+//        String level= intent.getStringExtra(StartingScreenActivity.EXTRA_DIFFICULTY);
         // số câu dựa trên độ khó
         int positionToShowToSpinner = intent.getIntExtra(StartingScreenActivity.POSITION,0);
         //textViewLevel.setText("Level: "+level);
@@ -132,18 +134,15 @@ public class QuizActivity extends AppCompatActivity {
                 showSolution();
             }
         }
-        buttonConfirmNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!answered) {
-                    if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked()) {
-                        checkAnswer();
-                    } else {
-                        Toast.makeText(QuizActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
-                    }
+        buttonConfirmNext.setOnClickListener(v -> {
+            if (!answered) {
+                if (rb1.isChecked() || rb2.isChecked() || rb3.isChecked()) {
+                    checkAnswer();
                 } else {
-                    showNextQuestion();
+                    Toast.makeText(QuizActivity.this, "Please select an answer", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                showNextQuestion();
             }
         });
     }
@@ -167,6 +166,7 @@ public class QuizActivity extends AppCompatActivity {
             timeLeftInMillis = COUNTDOWN_IN_MILIS;
             startCountDown();
         } else {
+            // hoàn thành trò chơi
             Intent intent = new Intent(this, FinishScreenActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra(KEY_SCORE,score);
@@ -201,7 +201,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (timeLeftInMillis <10000){
             textViewCountDown.setTextColor(Color.RED);
-            //sound tic tok count down
+            // Âm thanh đếm ngược
             sound.playCountdownTimeSound();
         }else {
             textViewCountDown.setTextColor(textColorDefaultCd);
@@ -281,7 +281,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_SCORE, score);
         outState.putInt(KEY_QUESTION_COUNT,questionCounter);

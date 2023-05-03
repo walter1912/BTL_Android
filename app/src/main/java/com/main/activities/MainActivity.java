@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private SimpleCursorAdapter dataAdapter;
     private Button mNewWord;
     ListView listViewNewWord;
-    private ImageView mPreviewIv;
+//    private ImageView mPreviewIv;
 
 //    @SuppressLint("MissingInflatedId")
     @Override
@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //hide actionBar
+        // ẩn actionBar
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.hide();
 //        mPreviewIv = findViewById(R.id.imageIv);
 
@@ -54,64 +55,47 @@ public class MainActivity extends AppCompatActivity {
         mDatabaseHelper.updateFavToFalse();
 
         mButtonGame = findViewById(R.id.btn_game_main);
-        mButtonGame.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mDatabaseHelper.getAllFavWord().isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Phải chọn từ yêu thích trước", Toast.LENGTH_LONG).show();
-                } else {
-                    Intent i = new Intent(MainActivity.this, StartGameScreenActivity.class);
-                    startActivity(i);
-                }
+        mButtonGame.setOnClickListener(v -> {
+            if (mDatabaseHelper.getAllFavWord().isEmpty()) {
+                Toast.makeText(MainActivity.this, "Phải chọn từ yêu thích trước", Toast.LENGTH_LONG).show();
+            } else {
+                Intent i = new Intent(MainActivity.this, StartGameScreenActivity.class);
+                startActivity(i);
             }
         });
 
         mButtonLearn = findViewById(R.id.btn_learn_word);
-        mButtonLearn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, StartingScreenActivity.class);
-                startActivity(i);
-            }
+        mButtonLearn.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, StartingScreenActivity.class);
+            startActivity(i);
         });
 
         mButtonFavorite = findViewById(R.id.btn_fav_word);
-        mButtonFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, FavoriteActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-            }
+        mButtonFavorite.setOnClickListener(v -> {
+            Intent i = new Intent(MainActivity.this, FavoriteActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
         });
 
         mButtonFloatingWindow = findViewById(R.id.btn_looking);
         getPermission();
-        mButtonFloatingWindow.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(View v) {
-                if (!Settings.canDrawOverlays(MainActivity.this)) {
-                    getPermission();
-                } else {
-                    Intent intent = new Intent(MainActivity.this, FloatingWindow.class);
-                    startService(intent);
-                    finish();
-                }
+        mButtonFloatingWindow.setOnClickListener(v -> {
+            if (!Settings.canDrawOverlays(MainActivity.this)) {
+                getPermission();
+            } else {
+                Intent intent = new Intent(MainActivity.this, FloatingWindow.class);
+                startService(intent);
+                finish();
             }
         });
 
+        // từ mới mỗi ngày
         mNewWord = findViewById(R.id.new_word_refresh);
-        mNewWord.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                displayListView();
-            }
-        });
+        mNewWord.setOnClickListener(v -> displayListView());
         displayListView();
     }
 
-    //Display word in an activity
+    // đẩy sang DisplayWordActivity
     public void getDescription(String word) {
         String ans = mDatabaseHelper.getDescription(word);
         Intent intent = new Intent(MainActivity.this, DisplayWordActivity.class);
@@ -123,20 +107,19 @@ public class MainActivity extends AppCompatActivity {
     private void displayListView() {
         Cursor cursor = mDatabaseHelper.getNewWord();
 
-        // The desired columns to be bound
+        // columns
         String[] columns = new String[] {
                 DatabaseHelper.WORD,
                 DatabaseHelper.DES
         };
 
-        // the XML defined views which the data will be bound to
+        // layouts
         int[] to = new int[] {
                 R.id.text_view_eng_word,
                 R.id.text_view_description,
         };
 
-        // create the adapter using the cursor pointing to the desired data
-        //as well as the layout information
+        // tạo một adapter sử dụng các thông tin của layout và cursor từ hàm getNewWord() trỏ đến dữ liệu mong muốn
         dataAdapter = new SimpleCursorAdapter(
                 this, R.layout.activity_listview,
                 cursor,
@@ -144,19 +127,16 @@ public class MainActivity extends AppCompatActivity {
                 to,
                 0);
 
-        listViewNewWord = (ListView) findViewById(R.id.list_new_word);
-        // Assign adapter to ListView
+        listViewNewWord = findViewById(R.id.list_new_word);
+        // set adapter cho ListView
         listViewNewWord.setAdapter(dataAdapter);
 
-        listViewNewWord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //get item's position and retrieve it from db
-                Object clickItemObject = parent.getAdapter().getItem(position);
-                SQLiteCursor c = (SQLiteCursor)clickItemObject;
-                String word= c.getString(c.getColumnIndex(DatabaseHelper.WORD));
-                getDescription(word);
-            }
+        listViewNewWord.setOnItemClickListener((parent, view, position, id) -> {
+            // lấy word của item và đẩy sang DisplayWordAcitivity
+            Object clickItemObject = parent.getAdapter().getItem(position);
+            SQLiteCursor c = (SQLiteCursor)clickItemObject;
+            String word= c.getString(c.getColumnIndex(DatabaseHelper.WORD));
+            getDescription(word);
         });
     }
 
